@@ -54,7 +54,7 @@ const Page = () => {
                   <Text>{new Date(donation.date).toLocaleDateString('fr-FR')}</Text>
 
                   <Text strong>Note:</Text>
-                  <Text>{donation.grade || "N/A"}</Text>
+                  <Text>{donation.notes || "N/A"}</Text>
                 </div>
               </Card>
             </Col>

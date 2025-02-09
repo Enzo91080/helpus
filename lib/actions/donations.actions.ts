@@ -8,7 +8,7 @@ export async function getDonations(): Promise<IDonation[]> {
   await connectDB();
 
   try {
-    const donations: IDonation[] = await Donation.find();
+    const donations: IDonation[] = await Donation.find().lean();
     return donations;
   } catch (error) {
     console.error("Erreur lors de la récupération des donations :", error);

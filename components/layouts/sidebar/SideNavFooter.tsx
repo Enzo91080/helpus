@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 
 const SideNavFooter = () => {
   const { data: session } = useSession()
-  console.log(session)
 
   return (
     <div

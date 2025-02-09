@@ -31,7 +31,6 @@ export async function getBeneficiaryById(id: string): Promise<IBeneficiary | nul
 
 export async function createBeneficiary(beneficiary: IBeneficiary): Promise<IBeneficiary> {
   await connectDB();
-
   try {
     const newBeneficiary: IBeneficiary = await Beneficiary.create(beneficiary);
     return newBeneficiary;

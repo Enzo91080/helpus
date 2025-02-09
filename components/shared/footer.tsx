@@ -24,7 +24,7 @@ const Footer = () => {
         </div>
 
         {/* Section 3: À propos */}
-        <div className="space-y-3">
+        {/* <div className="space-y-3">
           <h2 className="text-base font-semibold font-yusei">À propos</h2>
           <ul className="flex flex-col space-y-2 font-antic text-sm">
             <li>
@@ -55,7 +55,7 @@ const Footer = () => {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
 
       {/* Section Footer Bas */}

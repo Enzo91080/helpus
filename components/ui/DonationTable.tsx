@@ -5,7 +5,6 @@ import { TableColumnsType, Input, message } from "antd";
 import TableComponent from "./table";
 import { IDonation } from "@/types/IDonnation";
 import { getDonations } from "@/lib/actions/donations.actions";
-import dayjs from "dayjs";
 
 const { Search } = Input;
 
@@ -19,20 +18,22 @@ const columns: TableColumnsType<IDonation> = [
     dataIndex: "type",
   },
   {
-    title: "Description",
-    dataIndex: "grade",
+    title: "Notes",
+    dataIndex: "notes",
   },
   {
     title: "Date et heure",
     dataIndex: "date",
-    render: (date: string) => dayjs(date).format("DD/MM/YYYY HH:mm"),
+    render: (date: string) => new Date(date).toLocaleString("fr-FR"),
   },
 ];
 
-const DonationTable: React.FC = () => {
+const DonationTable: React.FC<{ refresh: boolean }> = ({ refresh }) => {
   const [data, setData] = useState<IDonation[]>([]);
   const [filteredData, setFilteredData] = useState<IDonation[]>([]);
   const [searchText, setSearchText] = useState("");
+  const [refreshTable, setRefreshTable] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +41,7 @@ const DonationTable: React.FC = () => {
         const donations = await getDonations();
         const formattedData = donations.map((d: IDonation) => ({
           ...d,
-          key: d._id, // Ajoute `key` requis par Ant Design
+          key: d._id.toString(), // Ajoute `key` requis par Ant Design
         }));
         setData(formattedData);
         setFilteredData(formattedData); // Initialise `filteredData` avec toutes les données
@@ -72,7 +73,6 @@ const DonationTable: React.FC = () => {
 
   return (
     <div>
-      {/* Barre de recherche */}
       <div className="flex justify-center">
         <Search
           placeholder="Rechercher une donation..."
@@ -81,13 +81,8 @@ const DonationTable: React.FC = () => {
           onChange={(e) => handleSearch(e.target.value)}
           style={{ maxWidth: 600, marginBottom: 5 }}
         />
-    </div>
-      <TableComponent<IDonation>
-        columns={columns}
-        data={filteredData}
-        onRowSelection={handleSelection}
-        onRowClick={handleRowClick}
-      />
+      </div>
+      <TableComponent columns={columns} data={filteredData} />
     </div>
   );
 };

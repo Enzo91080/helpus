@@ -7,6 +7,7 @@ import AuthProvider from "@/providers/auth-provider";
 import ThemeProvider from "@/providers/theme-provider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import LayoutWrapper from "./layoutWrapper";
+import GlobalModal from "@/components/ui/GlobalModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               disableTransitionOnChange
             >
               <LayoutWrapper>{children}</LayoutWrapper>
+              <GlobalModal /> {/* La modal est maintenant accessible partout */}
               <Toaster />
             </ThemeProvider>
           </AntdRegistry>

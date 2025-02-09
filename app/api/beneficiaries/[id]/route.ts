@@ -1,5 +1,5 @@
 import connectDB from "@/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { Beneficiary } from "@/lib/models/beneficiary.model";
 
@@ -31,3 +31,23 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await connectDB();
+  try {
+    const { id } = params; // ✅ Vérifiez que l'ID est bien extrait
+    if (!id) {
+      return NextResponse.json({ error: "ID manquant" }, { status: 400 });
+    }
+    const deletedBeneficiary = await Beneficiary.findByIdAndDelete(id);
+    if (!deletedBeneficiary) {
+      return NextResponse.json({ error: "Bénéficiaire introuvable" }, { status: 404 });
+    }
+    return NextResponse.json({ message: "Bénéficiaire supprimé avec succès" });
+  } catch (error) {
+    console.error("Erreur suppression :", error);
+    return NextResponse.json(
+      { error: "Une erreur est survenue lors de la suppression du bénéficiaire." },
+      { status: 500 }
+    );
+  }
+}
