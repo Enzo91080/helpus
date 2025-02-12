@@ -6,7 +6,7 @@ export const streamClient = StreamChat.getInstance(
 );
 
 // Helper function to get user token
-export async function getUserStreamToken(userId: string) {
+export const getUserStreamToken = async (userId: string): Promise<string> => {
   try {
     const response = await fetch('/api/stream/token', {
       method: 'POST',
@@ -15,10 +15,20 @@ export async function getUserStreamToken(userId: string) {
       },
       body: JSON.stringify({ userId }),
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to get stream token');
+    }
+
     const data = await response.json();
+    
+    if (!data.token) {
+      throw new Error('No token received from server');
+    }
+
     return data.token;
   } catch (error) {
     console.error('Error getting stream token:', error);
-    throw error;
+    throw error; // Re-throw to handle it in the provider
   }
-} 
+}; 

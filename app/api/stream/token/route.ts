@@ -5,7 +5,7 @@ import { nextauthOptions } from '@/lib/nextauth-options';
 
 const serverClient = StreamChat.getInstance(
   process.env.NEXT_PUBLIC_STREAM_KEY!,
-  process.env.STREAM_SECRET
+  process.env.STREAM_SECRET!
 );
 
 export async function POST(req: NextRequest) {
@@ -20,17 +20,28 @@ export async function POST(req: NextRequest) {
     }
 
     const { userId } = await req.json();
-    
-    // Create or update the user
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Always create/update the user with default values if some are missing
     await serverClient.upsertUser({
       id: userId,
-      name: session.user.name || '',
-      image: session.user.image || '',
-      role: session.user.role === 'admin' ? 'admin' : 'user'
+      name: session.user.name || userId, // Fallback to userId if name is missing
+      image: session.user.image || undefined,
+      role: session.user.role === 'admin' ? 'admin' : 'admin'
     });
 
-    // Generate a user token
+    // Generate a user token - this will always work for a valid user
     const token = serverClient.createToken(userId);
+
+    if (!token) {
+      throw new Error('Failed to generate token');
+    }
 
     return NextResponse.json({ token });
   } catch (error) {

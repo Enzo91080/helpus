@@ -28,7 +28,6 @@ const Header: React.FC<HeaderProps> = ({ setSidebarOpen }) => {
           className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md text-gray-700"
         >
           <span>Chat</span>
-
           <MessageCircle className="h-5 w-5" />
         </Link>
         <UserBar />

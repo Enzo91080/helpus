@@ -33,16 +33,18 @@ export const StreamChatProvider = ({ children }: StreamChatProviderProps) => {
       try {
         const token = await getUserStreamToken(session.user._id);
         
-        // Disconnect existing user if any
+        if (!token) {
+          throw new Error('Failed to get chat token');
+        }
+
         if (client) {
           await client.disconnectUser();
         }
 
-        // Connect user with error handling
         await streamClient.connectUser(
           {
             id: session.user._id,
-            name: session.user.name || '',
+            name: session.user.name || session.user._id,
             image: session.user.image || '',
           },
           token
@@ -58,20 +60,22 @@ export const StreamChatProvider = ({ children }: StreamChatProviderProps) => {
     initChat();
 
     return () => {
-      streamClient.disconnectUser();
-      setClient(null);
+      if (client) {
+        streamClient.disconnectUser();
+        setClient(null);
+      }
     };
   }, [session]);
 
-  if (!client) {
-    return null;
-  }
-
   return (
     <StreamChatContext.Provider value={{ client, setClient }}>
-      <Chat client={client}>
-        {children}
-      </Chat>
+      {client ? (
+        <Chat client={client}>
+          {children}
+        </Chat>
+      ) : (
+        children
+      )}
     </StreamChatContext.Provider>
   );
 };
