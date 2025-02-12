@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       id: userId,
       name: session.user.name || '',
       image: session.user.image || '',
-      role: 'admin'
+      role: session.user.role === 'admin' ? 'admin' : 'user'
     });
 
     // Generate a user token
