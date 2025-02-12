@@ -20,7 +20,31 @@ describe('Donations API', () => {
   })
 
   it('should create a new donation', async () => {
+    const donor = new Donor({ 
+        name: 'Test Donor', 
+        email: 'donor@test.com',
+        donationType: DonationType.FINANCIAL,
+        status: 'active',
+        phone: '1234567890'
+    })
+
+    await donor.save()
+
+    const beneficiary = new Beneficiary({ 
+      name: 'Test Beneficiary',
+      email: 'beneficiary@test.com',
+      needs: 'clothing',
+      status: BeneficiaryStatus.ACTIVE,
+      phone: '1234567890',
+      address: '123 Test St'
+    })
+    
+    await beneficiary.save()
+
+
     const donation = new Donation({
+      donorId: donor._id,
+      beneficiaryId: beneficiary._id, 
       amount: 100,
       type: "financial",
       date: new Date(),
@@ -43,16 +67,27 @@ describe('Donations API', () => {
         status: 'active',
         phone: '1234567890'
     })
-    await donor.save()
+    const beneficiary = new Beneficiary({ 
+      name: 'Test Beneficiary',
+      email: 'beneficiary@test.com',
+      needs: 'clothing',
+      status: BeneficiaryStatus.ACTIVE,
+      phone: '1234567890',
+      address: '123 Test St'
+    })
+    await beneficiary.save()
 
+    await donor.save()
     const donation1 = new Donation({
       donorId: donor._id,
+      beneficiaryId: beneficiary._id,
       amount: 100,
       type: "financial",
       date: new Date()
     })
     const donation2 = new Donation({
       donorId: donor._id,
+      beneficiaryId: beneficiary._id,
       amount: 200,
       type: "financial",
       date: new Date()
@@ -75,8 +110,19 @@ describe('Donations API', () => {
     })
     await beneficiary.save()
 
+    const donor = new Donor({ 
+      name: 'Test Donor', 
+      email: 'donor@test.com',
+      donationType: DonationType.FINANCIAL,
+      status: 'active',
+      phone: '1234567890'
+    })
+    await donor.save()
+
+  
     const donation = new Donation({
       beneficiaryId: beneficiary._id,
+      donorId: donor._id,
       amount: 100,
       type: "financial",
       date: new Date()
@@ -89,7 +135,29 @@ describe('Donations API', () => {
   })
 
   it('should get all donations', async () => {
+    const donor = new Donor({ 
+      name: 'Test Donor', 
+      email: 'donor@test.com',
+      donationType: DonationType.FINANCIAL,
+      status: 'active',
+      phone: '1234567890'
+    })
+
+    await donor.save()
+
+    const beneficiary = new Beneficiary({ 
+      name: 'Test Beneficiary',
+      email: 'beneficiary@test.com',
+      needs: 'clothing',
+      status: BeneficiaryStatus.ACTIVE,
+      phone: '1234567890',
+      address: '123 Test St'
+    })  
+    await beneficiary.save()
+    
     const donation = new Donation({
+      donorId: donor._id,
+      beneficiaryId: beneficiary._id,
       amount: 100,
       type: "financial",
       date: new Date(),
