@@ -21,6 +21,14 @@ export async function POST(req: NextRequest) {
 
     const { userId } = await req.json();
     
+    // Create or update the user
+    await serverClient.upsertUser({
+      id: userId,
+      name: session.user.name || '',
+      image: session.user.image || '',
+      role: 'admin'
+    });
+
     // Generate a user token
     const token = serverClient.createToken(userId);
 

@@ -33,6 +33,12 @@ export const StreamChatProvider = ({ children }: StreamChatProviderProps) => {
       try {
         const token = await getUserStreamToken(session.user._id);
         
+        // Disconnect existing user if any
+        if (client) {
+          await client.disconnectUser();
+        }
+
+        // Connect user with error handling
         await streamClient.connectUser(
           {
             id: session.user._id,

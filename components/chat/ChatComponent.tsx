@@ -22,13 +22,25 @@ export default function ChatComponent() {
     if (!client || !session?.user) return;
 
     const initChannel = async () => {
-      const channel = client.channel('messaging', 'general', {
-        name: 'General',
-        members: [session.user._id],
-      });
+      try {
+        // Create channel with explicit permissions
+        const channel = client.channel('messaging', 'general', {
+          name: 'General',
+          members: [session.user._id],
+          created_by_id: session.user._id,
+        });
 
-      await channel.watch();
-      setChannel(channel as any);
+        // Set channel options
+        await channel.create();
+        await channel.addMembers([session.user._id], {
+          message: `${session.user.name || 'User'} joined the channel`,
+        });
+        
+        await channel.watch();
+        setChannel(channel as any);
+      } catch (error) {
+        console.error('Error initializing channel:', error);
+      }
     };
 
     initChannel();
