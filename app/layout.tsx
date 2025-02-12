@@ -8,6 +8,7 @@ import ThemeProvider from "@/providers/theme-provider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import LayoutWrapper from "./layoutWrapper";
 import GlobalModal from "@/components/ui/GlobalModal";
+import { StreamChatProvider } from "@/providers/stream-chat-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +29,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               enableSystem
               disableTransitionOnChange
             >
-              <LayoutWrapper>{children}</LayoutWrapper>
-              <GlobalModal /> {/* La modal est maintenant accessible partout */}
-              <Toaster />
+              <StreamChatProvider>
+                <LayoutWrapper>{children}</LayoutWrapper>
+                <GlobalModal /> {/* La modal est maintenant accessible partout */}
+                <Toaster />
+              </StreamChatProvider>
             </ThemeProvider>
           </AntdRegistry>
         </AuthProvider>
