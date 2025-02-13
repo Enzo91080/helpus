@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Header from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
-import { useSession } from "next-auth/react";
 import SideNav from "@/components/layouts/sidebar/Sidenav";
 
 export default function Template({ children }: { children: React.ReactNode }) {

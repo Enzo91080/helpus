@@ -26,15 +26,15 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#ADBBDA",
+        foreground: "#ADBBDA",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#ADBBDA",
+          foreground: "#ADBBDA",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#7091E6",
+          foreground: "#7091E6",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -45,8 +45,8 @@ module.exports = {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#3D52A0",
+          foreground: "#7091E6",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

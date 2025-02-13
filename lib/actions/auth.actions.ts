@@ -1,4 +1,4 @@
-"use server" // 開頭統一加上"use server"即可
+"use server"
 
 import { getServerSession } from "next-auth/next"
 import { Account, Profile } from "next-auth"
@@ -72,11 +72,15 @@ export async function getUserByEmail({
 }
 
 export interface UpdateUserProfileParams {
-  name: string
+  firstName: string,
+  lastName: string,
+  email:string
 }
 
 export async function updateUserProfile({
-  name
+  firstName,
+  lastName,
+  email
 }: UpdateUserProfileParams) {
   const session = await getServerSession(nextauthOptions)
   // console.log(session)
@@ -89,7 +93,9 @@ export async function updateUserProfile({
     }
 
     const user = await User.findByIdAndUpdate(session?.user?._id, {
-      name
+      firstName,
+      lastName,
+      email
     }, { new: true }).select("-password")
 
     if (!user) {

@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/providers/auth-provider";
 import ThemeProvider from "@/providers/theme-provider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import LayoutWrapper from "./layoutWrapper";
-import GlobalModal from "@/components/ui/GlobalModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +26,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               disableTransitionOnChange
             >
               {children}
-              <Toaster />
             </ThemeProvider>
           </AntdRegistry>
         </AuthProvider>

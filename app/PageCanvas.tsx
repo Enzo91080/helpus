@@ -1,3 +1,4 @@
+"use client"
 import { ReactNode } from "react";
 import { findSlotOfType } from "./tools/global-tools";
 
