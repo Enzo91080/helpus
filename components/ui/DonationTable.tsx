@@ -9,6 +9,9 @@ import { getDonations } from "@/lib/actions/donations.actions";
 import { useModal } from "@/app/store/modalStore";
 import DonationForm from "../form/DonationForm";
 import React from "react";
+import { MessageCircle } from "lucide-react";
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const { Search } = Input;
 
@@ -18,6 +21,8 @@ const DonationTable: React.FC<{ refresh: boolean }> = ({ refresh }) => {
   const [searchText, setSearchText] = useState("");
   const { openModal, closeModal } = useModal();
   const [refreshTable, setRefreshTable] = useState(false);
+  const router = useRouter();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,6 +121,27 @@ const DonationTable: React.FC<{ refresh: boolean }> = ({ refresh }) => {
     }
   };
 
+  const handleChatClick = async (donation: IDonation) => {
+    try {
+      // Check if user is either donor, beneficiary, or admin
+      const userId = session?.user?._id;
+      const isDonor = donation.donorId._id === userId;
+      const isBeneficiary = donation.beneficiaryId._id === userId;
+      const isAdmin = session?.user?.role === 'admin';
+
+      if (!isDonor && !isBeneficiary && !isAdmin) {
+        message.error("Vous n'avez pas accès à cette conversation");
+        return;
+      }
+
+      // Navigate to chat page with donation ID
+      router.push(`/chat/${donation._id}`);
+    } catch (error) {
+      message.error("Erreur lors de l'accès au chat");
+      console.error(error);
+    }
+  };
+
   const columns: TableColumnsType<IDonation & { key: string }> = [
     {
       title: "Montant",
@@ -149,10 +175,16 @@ const DonationTable: React.FC<{ refresh: boolean }> = ({ refresh }) => {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Button
-          icon={<EditOutlined />}
-          onClick={() => editDonationModal(record._id.toString())}
-        />
+        <div className="flex gap-2">
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => editDonationModal(record._id.toString())}
+          />
+          <Button
+            icon={<MessageCircle className="h-4 w-4" />}
+            onClick={() => handleChatClick(record)}
+          />
+        </div>
       ),
     },
   ];

@@ -23,7 +23,8 @@ const donationSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  notes: String
+  notes: String,
+  channelId: String,
 }, { timestamps: true })
 
 const Donation = mongoose.models.Donation || mongoose.model("Donation", donationSchema)

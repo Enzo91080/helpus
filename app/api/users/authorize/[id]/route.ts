@@ -30,9 +30,7 @@ export async function POST(request: NextRequest) {
     // Disconnect
     await mongoose.disconnect()
 
-    return NextResponse.redirect(new URL('/signin', request.url)
-
-    )
+    return NextResponse.redirect(new URL('/signin', request.url))
 
   } catch (error) {
     console.error('Error updating user role:', error)

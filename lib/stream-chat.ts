@@ -31,4 +31,24 @@ export const getUserStreamToken = async (userId: string): Promise<string> => {
     console.error('Error getting stream token:', error);
     throw error; // Re-throw to handle it in the provider
   }
-}; 
+};
+
+export async function createDonationChannel(donation: any, currentUserId: string) {
+  try {
+    const channelId = `donation-${donation._id}`;
+    const channel = streamClient.channel('messaging', channelId, {
+      name: `Donation Discussion - ${donation.amount}€`,
+      members: [
+        donation.donorId._id.toString(),
+        donation.beneficiaryId._id.toString()
+      ],
+      donation_id: donation._id.toString(),
+    });
+
+    await channel.create();
+    return channelId;
+  } catch (error) {
+    console.error('Error creating donation channel:', error);
+    throw error;
+  }
+}

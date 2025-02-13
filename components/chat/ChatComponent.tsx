@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   Channel,
   ChannelHeader,
-  ChannelList,
   MessageInput,
   MessageList,
   Thread,
@@ -13,38 +12,52 @@ import {
 import { useStreamChat } from '@/providers/stream-chat-provider';
 import { useSession } from 'next-auth/react';
 
-export default function ChatComponent() {
+interface ChatComponentProps {
+  channelId?: string;
+  members?: string[];
+}
+
+export default function ChatComponent({ channelId, members }: ChatComponentProps) {
   const { client } = useStreamChat();
   const { data: session } = useSession();
   const [channel, setChannel] = useState(null);
 
   useEffect(() => {
-    if (!client || !session?.user) return;
+    if (!client || !session?.user || !members) return;
 
     const initChannel = async () => {
       try {
-        // Create channel with explicit permissions
-        const channel = client.channel('messaging', 'general', {
-          name: 'General',
-          members: [session.user._id],
-          created_by_id: session.user._id,
+        // Fetch user data first
+        const userDataPromises = members.map(async (memberId) => {
+          const response = await fetch(`/api/users/${memberId}`);
+          return response.json();
         });
 
-        // Set channel options
-        await channel.create();
-        await channel.addMembers([session.user._id], {
-          message: `${session.user.name || 'User'} joined the channel`,
+        const usersData = await Promise.all(userDataPromises);
+
+        // Create users in Stream via server endpoint
+        await fetch('/api/stream/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ users: usersData }),
         });
-        
-        await channel.watch();
-        setChannel(channel as any);
+
+        // Then create/initialize the channel
+        const channelInstance = client.channel('messaging', channelId, {
+          members: members,
+        });
+
+        await channelInstance.watch();
+        setChannel(channelInstance as any);
       } catch (error) {
         console.error('Error initializing channel:', error);
       }
     };
 
     initChannel();
-  }, [client, session]);
+  }, [client, session, channelId, members]);
 
   if (!channel) return null;
 
